@@ -1,6 +1,6 @@
-import config from '@/config';
+import { intl } from '@/config';
 import { redirect } from 'next/navigation';
 
 export default function RootPage() {
-  redirect(config.intl.defaultLocale);
+  redirect(intl.defaultLocale);
 }
