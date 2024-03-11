@@ -122,5 +122,14 @@
   },
   "Buttons": {
     "add": "Добавить"
+  },
+  "Inputs": {
+    "count": "Количество",
+    "price": "Цена за 1 шт.",
+    "preparation": "Приладка"
+  },
+  "Other": {
+    "totalPrice": "Общая сумма",
+    "valute": "грн."
   }
 }

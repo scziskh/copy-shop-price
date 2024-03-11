@@ -1,3 +1,7 @@
-export const getSum = (...values) => {
-  return values.reduce((accum, value) => accum + value, 0);
+export const getSum = (values) => {
+  console.log({ values });
+  return values.reduce((accum, value) => {
+    const result = accum + value;
+    return result;
+  }, 0);
 };

@@ -183,6 +183,7 @@
   "paper_DNS_300g_A3": 14,
   "paper_raflatac": 10,
   "paper_ritrama": 24,
+  "linen_300g_A3": 38,
   "plotter_cutting": {
     "maxCount": {
       "10": { "value": 4, "min": 10 },
