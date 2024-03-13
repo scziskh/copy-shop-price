@@ -194,6 +194,31 @@ const Homepage = () => {
                         </CloseButton>
                       </ElementThree>
                     );
+                  case 'lamination':
+                    return (
+                      <ElementThree key={`${item}_${index}-count`}>
+                        <div>{tSelect(item)}</div>
+                        <Input
+                          name={`service.${item}_preparation.price`}
+                          placeholder={tInputs('preparation')}
+                          type="number"
+                          step={0.05}
+                          defaultValue={price[item].preparation}
+                        />
+                        <Input
+                          name={`service.${item}.count`}
+                          placeholder={tInputs('count')}
+                          type="number"
+                          min={0}
+                          onInput={(e) => countChange(e, item)}
+                          step={1}
+                        />
+                        <Input name={`service.${item}.price`} placeholder={tInputs('price')} type="number" step={0.05} />
+                        <CloseButton type="button" onClick={methods.handleSubmit(() => removeService(item))}>
+                          ×
+                        </CloseButton>
+                      </ElementThree>
+                    );
                   case 'plotter_cutting':
                     return (
                       <Element key={`${item}_${index}-count`}>

@@ -366,22 +366,22 @@
     },
     "default": 36
   },
-  "lamination_thick_preparation": 40,
   "lamination_glossy_thick": {
     "maxCount": {
       "5": 20,
       "20": 18
     },
-    "default": 17
+    "default": 17,
+    "preparation": 40
   },
   "lamination_matt_thick": {
     "maxCount": {
       "5": 33,
       "20": 31.5
     },
-    "default": 30
+    "default": 30,
+    "preparation": 40
   },
-  "lamination_preparation": 35,
   "lamination_glossy_1+0": {
     "maxCount": {
       "10": 12,
@@ -389,7 +389,8 @@
       "100": 6.5,
       "200": 5.5
     },
-    "default": 4.5
+    "default": 4.5,
+    "preparation": 35
   },
   "lamination_glossy_1+1": {
     "maxCount": {
@@ -398,7 +399,8 @@
       "100": 8,
       "200": 6.5
     },
-    "default": 6
+    "default": 6,
+    "preparation": 35
   },
   "lamination_matt_1+0": {
     "maxCount": {
@@ -407,7 +409,8 @@
       "100": 6.5,
       "200": 5.5
     },
-    "default": 4.5
+    "default": 4.5,
+    "preparation": 35
   },
   "lamination_matt_1+1": {
     "maxCount": {
@@ -416,7 +419,8 @@
       "100": 9,
       "200": 8
     },
-    "default": 7
+    "default": 7,
+    "preparation": 35
   },
   "binding_plastic_8": {
     "maxCount": {
