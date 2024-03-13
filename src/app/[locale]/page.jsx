@@ -113,6 +113,9 @@ const Homepage = () => {
       services.filter((el) => {
         if (el === item) {
           methods.setValue(`service.${item}`, null);
+          if (methods.getValues(`service.${item}_preparation`)) {
+            methods.setValue(`service.${item}_preparation`, null);
+          }
           return false;
         }
         return true;
@@ -169,32 +172,7 @@ const Homepage = () => {
                         </CloseButton>
                       </Element>
                     );
-                  case 'binding_thermo':
-                    return (
-                      <ElementThree key={`${item}_${index}-count`}>
-                        <div>{tSelect(item)}</div>
-                        <Input
-                          name={`service.binding_thermo_preparation.price`}
-                          placeholder={tInputs('preparation')}
-                          type="number"
-                          step={0.05}
-                          defaultValue={price.binding_thermo.preparation}
-                        />
-                        <Input
-                          name={`service.binding_thermo.count`}
-                          placeholder={tInputs('count')}
-                          type="number"
-                          min={0}
-                          onInput={(e) => countChange(e, item)}
-                          step={1}
-                        />
-                        <Input name={`service.binding_thermo.price`} placeholder={tInputs('price')} type="number" step={0.05} />
-                        <CloseButton type="button" onClick={methods.handleSubmit(() => removeService(item))}>
-                          ×
-                        </CloseButton>
-                      </ElementThree>
-                    );
-                  case 'lamination':
+                  case 'multi_value_preparation':
                     return (
                       <ElementThree key={`${item}_${index}-count`}>
                         <div>{tSelect(item)}</div>
