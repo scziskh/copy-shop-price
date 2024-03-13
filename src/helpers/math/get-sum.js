@@ -1,7 +1,6 @@
 export const getSum = (values) => {
-  console.log({ values });
-  return values.reduce((accum, value) => {
-    const result = accum + value;
-    return result;
+  const result = values.reduce((accum, value) => {
+    return accum + value;
   }, 0);
+  return parseFloat(result).toFixed(2);
 };

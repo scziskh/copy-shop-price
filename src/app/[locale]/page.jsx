@@ -49,7 +49,7 @@ const Homepage = () => {
   /*Handlers*/
   const submitHandler = (formData) => {
     if (formData?.mainSelect?.value) {
-      if (formData?.count?.[formData.mainSelect.value] === undefined) {
+      if (!formData?.service?.[formData.mainSelect.value]) {
         setServices((state) => [...state, formData.mainSelect.value]);
       }
     }
@@ -57,21 +57,23 @@ const Homepage = () => {
 
   const changeHandler = () => {
     if (methods.getValues('service')) {
-      console.log(methods.getValues('service'));
-      setTotalPrice(() =>
-        getSum(
+      console.log();
+      setTotalPrice(() => {
+        return getSum(
           Object.entries(methods.getValues('service')).map(([key, item]) => {
             switch (key) {
               case 'binding_thermo':
-                return item.price * (item.count - 10);
+                return !isNaN(item?.price * (item?.count - 10)) ? item?.price * (item?.count - 10) : 0;
               default:
-                return item.price * (item.count ?? 1);
+                return !isNaN(item?.price * (item?.count ?? 1)) ? item?.price * (item?.count ?? 1) : 0;
             }
           }),
-        ),
-      );
+        );
+      });
     }
   };
+
+  useEffect(() => {}, [methods, services]);
 
   const countChange = (e, item) => {
     const count = e.target.value;
@@ -97,7 +99,6 @@ const Homepage = () => {
 
   const getPricePlotter = (cost, count) => {
     const defaultValue = cost.default.value;
-    console.log(defaultValue);
     for (const [key, value] of Object.entries(cost.maxCount)) {
       if (+count <= +key) {
         return value['value'];
@@ -105,6 +106,19 @@ const Homepage = () => {
     }
 
     return defaultValue;
+  };
+
+  const removeService = (item) => {
+    setServices(
+      services.filter((el) => {
+        if (el === item) {
+          methods.setValue(`service.${item}`, null);
+          return false;
+        }
+        return true;
+      }),
+    );
+    changeHandler();
   };
 
   if (!isClient || !price) {
@@ -134,6 +148,13 @@ const Homepage = () => {
               <Button label={tButtons('add')} type="submit" />
             </Grid>
             <Elements>
+              {!!services.length && (
+                <Element>
+                  <div>{tOther('service')}</div>
+                  <div>{tOther('count')}</div>
+                  <div>{tOther('price')}</div>
+                </Element>
+              )}
               {services.map((item, index) => {
                 const category = calculation.category[item];
                 switch (category) {
@@ -143,12 +164,22 @@ const Homepage = () => {
                         <div>{tSelect(item)}</div>
                         <Input name={`service.${item}.count`} placeholder={tInputs('count')} type="number" min={0} step={1} />
                         <Input name={`service.${item}.price`} placeholder={tInputs('price')} type="number" step={0.05} defaultValue={price[item]} />
+                        <CloseButton type="button" onClick={methods.handleSubmit(() => removeService(item))}>
+                          ×
+                        </CloseButton>
                       </Element>
                     );
                   case 'binding_thermo':
                     return (
-                      <Element key={`${item}_${index}-count`}>
+                      <ElementThree key={`${item}_${index}-count`}>
                         <div>{tSelect(item)}</div>
+                        <Input
+                          name={`service.binding_thermo_preparation.price`}
+                          placeholder={tInputs('preparation')}
+                          type="number"
+                          step={0.05}
+                          defaultValue={price.binding_thermo.preparation}
+                        />
                         <Input
                           name={`service.binding_thermo.count`}
                           placeholder={tInputs('count')}
@@ -158,14 +189,10 @@ const Homepage = () => {
                           step={1}
                         />
                         <Input name={`service.binding_thermo.price`} placeholder={tInputs('price')} type="number" step={0.05} />
-                        <Input
-                          name={`service.binding_thermo_preparation.price`}
-                          placeholder={tInputs('preparation')}
-                          type="number"
-                          step={0.05}
-                          defaultValue={price.binding_thermo.preparation}
-                        />
-                      </Element>
+                        <CloseButton type="button" onClick={methods.handleSubmit(() => removeService(item))}>
+                          ×
+                        </CloseButton>
+                      </ElementThree>
                     );
                   case 'plotter_cutting':
                     return (
@@ -180,6 +207,9 @@ const Homepage = () => {
                           step={1}
                         />
                         <Input name={`service.plotter_cutting.price`} placeholder={tInputs('price')} type="number" step={0.05} />
+                        <CloseButton type="button" onClick={methods.handleSubmit(() => removeService(item))}>
+                          ×
+                        </CloseButton>
                       </Element>
                     );
                   default:
@@ -195,14 +225,17 @@ const Homepage = () => {
                           step={1}
                         />
                         <Input name={`service.${item}.price`} placeholder={tInputs('price')} type="number" step={0.05} />
+                        <CloseButton type="button" onClick={methods.handleSubmit(() => removeService(item))}>
+                          ×
+                        </CloseButton>
                       </Element>
                     );
                 }
               })}
             </Elements>
-            {!!totalPrice && (
+            {totalPrice > 0 && (
               <TotalPrice>
-                <p>{`${tOther('totalPrice')} ${+totalPrice} ${tOther('valute')}`}</p>
+                <p>{`${tOther('totalPrice')} ${totalPrice} ${tOther('valute')}`}</p>
               </TotalPrice>
             )}
           </form>
@@ -232,7 +265,21 @@ const Elements = styled.div`
 const Element = styled.div`
   display: grid;
   align-items: center;
-  grid-template-columns: 4fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 200px 200px 50px;
+  padding: 12px;
+  gap: 48px;
+  &:nth-child(2n - 1) {
+    background-color: #ffddee;
+  }
+  &:nth-child(2n) {
+    background-color: #ddeeff;
+  }
+`;
+
+const ElementThree = styled.div`
+  display: grid;
+  align-items: center;
+  grid-template-columns: 1fr 200px 200px 200px 50px;
   padding: 12px;
   gap: 48px;
   &:nth-child(2n - 1) {
@@ -244,8 +291,30 @@ const Element = styled.div`
 `;
 
 const TotalPrice = styled.div`
+  text-align: right;
   p {
     display: block;
     font-size: 24px;
+  }
+`;
+const CloseButton = styled.button`
+  top: 0;
+  right: 12px;
+  font-size: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  color: var(--thirdColor);
+  background: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: filter var(--transitionDuration);
+  z-index: 100000;
+  &:hover {
+    color: var(--secondaryColor);
+  }
+  @media screen and (max-width: 768px) {
+    position: fixed;
   }
 `;
